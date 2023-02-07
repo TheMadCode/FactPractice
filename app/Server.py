@@ -1,3 +1,5 @@
+import json
+
 from datetime import timedelta
 
 from flask import Flask, render_template, make_response, request, jsonify, redirect
@@ -25,7 +27,10 @@ class Server:
         else:
             self.app = Flask(__name__, static_url_path='/app/')
         
-        self.app.secret_key = ' '
+        with open("./set_up.json", "r") as f:
+            data = json.load(f)
+
+        self.app.secret_key = data['secret_key']
         self.app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=160)
 
         self.socketio = SocketIO(self.app)
