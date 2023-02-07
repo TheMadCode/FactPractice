@@ -19,23 +19,6 @@ class Database_Core(Database):
         if len(resp) > 0:
             return resp[0]
 
-
-    def login_by_username(self, username, password):
-        resp = self.call_procedure('login_by_username', [username, password])
-        if len(resp) > 0:
-            return resp[0]
-
-    # name_i text, ufid_i text, relative_filepath_i text, type_i int, extension_i text, timestamp_i int, size_i int
-    def add_tracking_files(self, name, ufid, relative_filepath, type, extension, timestamp, alias, size, last_modified):
-        resp = self.call_procedure('add_tracking_files', [name, ufid, alias, relative_filepath, type, extension, timestamp, size, last_modified])
-        if len(resp) > 0:
-            return resp[0]
-
-    def get_ctp_files(self):
-        resp = self.call_procedure('get_ctp_files', [])
-        if len(resp) > 0:
-            return resp
-
     def request_file(self, ufid):
         resp = self.call_procedure('request_file', [ufid])
         if len(resp) > 0:
@@ -49,17 +32,23 @@ class Database_Core(Database):
         # for results in self.cursor.stored_results():
         #     return results.fetchall()[0]
 
-    def add_user(self, uuid_i, name_i, surname_i, middle_name_i, login_i, password_i, role_i):
-        try:
-            resp = self.call_procedure('add_user', [uuid_i, name_i, surname_i, middle_name_i, login_i, password_i, role_i])
-            if len(resp) > 0:
-                return resp[0]
-        except:
-            return {"code": 300, "response": "user already exists"}
+    def add_person(self, name, surname, middle_name, uuid, birth_date):
+        resp = self.call_procedure('add_person', [name, surname, middle_name, birth_date, uuid])
+        if len(resp) > 0:
+            return resp[0]
 
+    def update_person(self, name, surname, middle_name, uuid, birth_date):
+        resp = self.call_procedure('update_person', [name, surname, middle_name, birth_date, uuid])
+        if len(resp) > 0:
+            return resp[0]
 
-    def get_user_by_uuid(self, user_uuid):
-        resp = self.call_procedure('get_user_by_uuid', [user_uuid])
+    def remove_person(self, uuid):
+        resp = self.call_procedure('remove_person', [uuid])
+        if len(resp) > 0:
+            return resp[0]
+
+    def get_people(self):
+        resp = self.call_procedure('get_people', [])
         if len(resp) > 0:
             return resp[0]
 
