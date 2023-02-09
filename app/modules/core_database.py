@@ -1,5 +1,5 @@
+from app.Libs.Design.Patterns import Singleton
 from ._database import Database
-from Libs.Design.Patterns import Singleton
 
 @Singleton
 class Database_Core(Database):
@@ -32,13 +32,13 @@ class Database_Core(Database):
         # for results in self.cursor.stored_results():
         #     return results.fetchall()[0]
 
-    def add_person(self, name, surname, middle_name, uuid, birth_date):
-        resp = self.call_procedure('add_person', [name, surname, middle_name, birth_date, uuid])
+    def add_person(self, name, surname, middle_name, uuid, average_mark, birth_date):
+        resp = self.call_procedure('add_person', [name, surname, middle_name, average_mark, uuid, birth_date])
         if len(resp) > 0:
             return resp[0]
 
-    def update_person(self, name, surname, middle_name, uuid, birth_date):
-        resp = self.call_procedure('update_person', [name, surname, middle_name, birth_date, uuid])
+    def update_person(self, name, surname, middle_name, uuid, average_mark, birth_date):
+        resp = self.call_procedure('update_person', [uuid, name, surname, middle_name, average_mark, birth_date])
         if len(resp) > 0:
             return resp[0]
 
@@ -50,13 +50,13 @@ class Database_Core(Database):
     def get_people(self):
         resp = self.call_procedure('get_people', [])
         if len(resp) > 0:
-            return resp[0]
+            return resp
 
 @Singleton
 class Connector:
     def __init__(self) -> None:
         try:
-            self.connection = Database_Core(database="vermucht", pool_name="db_vermucht")
+            self.connection = Database_Core(database="fact_test", pool_name="db_fact")
 
         except:
             self.connection = None

@@ -8,6 +8,10 @@
   font-weight: normal;
 }
 
+/* body {
+    background-color: rgb(9, 138, 108);
+} */
+
 a,
 .green {
   text-decoration: none;
@@ -22,14 +26,9 @@ a,
 }
 
 @media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
+  /* #app {
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
-  }
+  } */
 }

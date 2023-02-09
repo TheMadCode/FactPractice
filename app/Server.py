@@ -3,6 +3,7 @@ import json
 from datetime import timedelta
 
 from flask import Flask, render_template, make_response, request, jsonify, redirect
+from flask_cors import CORS, cross_origin
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from werkzeug.security import safe_str_cmp
@@ -14,18 +15,28 @@ from .Libs.Outputer.logger import print, LoggerColor
 from .modules.connection import Connection
 from .modules.dataset import Accounts, LoginCredentials, Users
 
-import eventlet
-eventlet.monkey_patch(thread=False)
+from .modules import api
 
+import eventlet
+
+eventlet.monkey_patch(thread=False)
 Payload.max_decode_packets = 99999999999999999999
 
+
 class Server:
+    class Api:
+        def __init__(self) -> None:
+            self.people = api.People()
+
     def __init__(self) -> None:
         if __name__ == "__main__":
             self.app = Flask(__name__)
 
         else:
             self.app = Flask(__name__, static_url_path='/app/')
+
+        cors = CORS(self.app, resources={r"/human.api": {"origins": "*"}})
+        self.app.config['CORS_HEADERS'] = 'Content-Type'
         
         with open("./set_up.json", "r") as f:
             data = json.load(f)
@@ -33,6 +44,7 @@ class Server:
         self.app.secret_key = data['secret_key']
         self.app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=160)
 
+        self.api = Server.Api()
         self.socketio = SocketIO(self.app)
 
         self.users_dataset = Users()
@@ -60,25 +72,38 @@ class Server:
         #     return render_template("./auth.html")
 
         @self.app.route("/human.api/get_human", methods=['GET'])
+        @cross_origin(origin='*',headers=['Content-Type','Authorization'])
         def get_humans():
-            return "Implementation Error", 500
+            try:
+                response = self.api.people.get_people()
+
+            except:
+                return jsonify({
+                    "errorType": "Internal Server error",
+                    "errNum": "302x13k1k23"
+                }), 300
+
+            if "code" in response[0].keys():
+                return jsonify(response), response["code"]
+
+            return jsonify(response), 200
+
 
         @self.app.route("/human.api/add_human", methods=['POST'])
         def add_humans():
-            return "Implementation Error", 500
+            return "Implementation Error", 404
             
         @self.app.route("/human.api/remove_human", methods=['POST'])
         def remove_humans():
-            return "Implementation Error", 500
+            return "Implementation Error", 404
 
         @self.app.route("/human.api/update_human", methods=['POST'])
         def update_humans():
-            return "Implementation Error", 500
+            return "Implementation Error", 404
 
         @self.app.route("/logger/get_logs", methods=["GET"])
         def get_logger():
             return print()
-            
 
         @self.app.route("/logger", methods=["GET"])
         def logger():
