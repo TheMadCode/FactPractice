@@ -7,6 +7,8 @@ import router from "./router";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
+import UUID from "vue3-uuid";
+
 // import Vue from 'vue'
 // import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
@@ -29,6 +31,7 @@ const app = createApp(App);
 app.use(createPinia());
 
 app.use(router);
+app.use(UUID)
 
 app.component('EasyDataTable', Vue3EasyDataTable);
 

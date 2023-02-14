@@ -75,3 +75,28 @@ name, surname, middle_name = generate_name()
 
 serv = Server()
 serv.init()
+
+
+# """
+
+#     TEST one
+
+# """
+
+# def decoration_factory(operation):
+#     def decor(func):
+    
+#         def wrapper():
+#             func()
+#             print(operation)
+#             func()
+
+
+#         return wrapper
+#     return decor
+
+# @decoration_factory(111)
+# def test():
+#     print(1)
+
+# test()

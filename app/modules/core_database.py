@@ -1,5 +1,6 @@
 from app.Libs.Design.Patterns import Singleton
 from ._database import Database
+from datetime import date
 
 @Singleton
 class Database_Core(Database):
@@ -49,6 +50,8 @@ class Database_Core(Database):
 
     def get_people(self):
         resp = self.call_procedure('get_people', [])
+        for item in resp:
+            item['birth_date'] = item['birth_date'].isoformat()
         if len(resp) > 0:
             return resp
 

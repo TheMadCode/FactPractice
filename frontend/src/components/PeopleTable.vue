@@ -4,6 +4,8 @@
     import IconDelete from "./icons/IconDelete.vue";
     import IconReload from "./icons/IconReload.vue";
     import IconSave from "./icons/IconSave.vue";
+    
+    import Modal from "./Modal.vue";
 
 </script>
 
@@ -28,30 +30,50 @@
 </style>
 
 <template>
+
+    <Hint :text="currentFieldName" :is-active="showEditHint" @close="showEditHint = false"/>
+
+    <AddUserModal 
+        :show-modal="showUserModal"
+        :new-record="newRecord"
+        @close = "showUserModal = false"
+        @create_elem="createElem"
+        @clear_inputs="clearUserModal"
+    />
+
+    <EditUserModal 
+        :show-modal="showEditModal"
+        :items="editItems"
+        @showHint="showHint"
+        @hideHint="hideHint"
+        @save = "save_edit"
+        @close = "showEditModal = false"
+    />
+
     <div id="table-container" class="containet-xxl p-0 shadow">
         <div id="button-list" class="row m-0 ps-2 pt-1 pb-1 pe-2">
             <div class="d-flex align-items-end justify-content-between">
                 <div class="d-flex">
-                    <div v-on:click="create" class="btn">
+                    <button id="show-modal" @click="showUserModal = true" class="btn border-0">
                         <IconCreate></IconCreate>
-                    </div>
+                    </button>
 
-                    <div v-on:click="edit" class="btn">
+                    <button :disabled="itemsSelected.length <= 0" v-on:click="edit" class="btn border-0">
                         <IconEdit></IconEdit>
-                    </div>
+                    </button>
 
-                    <div v-on:click="remove" class="btn">
+                    <button :disabled="itemsSelected.length <= 0" v-on:click="remove" class="btn border-0">
                         <IconDelete></IconDelete>
-                    </div>
+                    </button>
                 </div>
                 <div class="d-flex">
                     <div v-on:click="this.reload" class="btn">
                         <IconReload></IconReload>
                     </div>
 
-                    <div v-on:click="save" class="btn">
+                    <button :disabled="this.actions.length <= 0" v-on:click="save" class="btn border-0">
                         <IconSave></IconSave>
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -60,13 +82,12 @@
                 :headers="headers"
                 :items="people"
                 :loading="isLoading"
+                
                 border-cell
                 buttons-pagination
 
                 v-model:items-selected="itemsSelected"
                 show-index
-
-                @click-row="showRow"
             />
         </div>
     </div>
@@ -74,18 +95,43 @@
 
 <script>
 
+    import { uuid } from "vue3-uuid";
+
     import axious from "axios";
+
+    import AddUserModal from "./addUserModal.vue";
+    import EditUserModal from "./editUserModal.vue";
+    import Hint from "./Hint.vue";
 
     const httpClient = axious.create();
     
     httpClient.defaults.timeout = 500;
 
+    var enum_Action = {
+        "Remove": 0x01,
+        "Create": 0x02,
+        "Edit": 0x03,
+    }
+
     export default {
-    mounted() {
+
+    created() {
         // console.log(
         httpClient.get("http://localhost:5050/human.api/get_human").then(response => {
             if (response.status === 200) {
-                this.people = response.data;
+                response.data.forEach(item => {
+                    console.log(item);
+                    this.people.push({
+                        "name": item.name,
+                        "surname": item.surname,
+                        "middle_name": item.middle_name,
+                        "average_mark": item.average_mark,
+                        "birth_date": item.birth_date,
+                        "uuid": item.uuid,
+                    })
+                })
+                // this.people = response.data;
+                // console.log(typeof(this.people[0].birth_date))
                 this.isLoading = false;
             }
         }).catch(error => {
@@ -100,13 +146,35 @@
             }
         });
     },
+
+    emits: 'switch',
+
     data() {
         return {
             people: [],
             itemsSelected: [],
-            opened: false,
-            visible: false,
+
+            showUserModal: false,
+            showEditModal: false,
+            showEditHint: false,
+
+            currentFieldName: "",
+
+            editItems: [],
+
+            newRecord: {
+                name: "",
+                surname: "",
+                middle_name: "",
+                average_mark: "",
+                date_of_birth: ""
+            },
+
+            actions: [],
+
+            showModal: false,
             isLoading: true,
+
             headers: [
                 { text: "Фамилия", value: "surname", sortable: true },
                 { text: "Имя", value: "name", sortable: true },
@@ -122,8 +190,45 @@
             // document.getElementById('row-clicked').innerHTML = JSON.stringify(item);
         },
 
-        create(item) {
+        clearUserModal() {
+            this.newRecord = {
+                name: "",
+                surname: "",
+                middle_name: "",
+                average_mark: "",
+                date_of_birth: ""
+            };
+        },
 
+        showHint(text) {
+            console.log(text)
+            this.showEditHint = true;
+            this.currentFieldName = text
+        },
+
+        hideHint() {
+            this.showEditHint = false;
+        },
+
+        createElem() {
+            this.showUserModal = false;
+            const user_uuid = uuid.v4();
+
+            const user_data = {
+                "name": this.newRecord.name,
+                "surname": this.newRecord.surname,
+                "middle_name":this.newRecord.middle_name,
+                "average_mark": this.newRecord.average_mark,
+                "birth_date": this.newRecord.date_of_birth,
+                "uuid": user_uuid,
+            };
+
+            this.people.push(user_data);
+
+            this.actions.push({
+                "action": enum_Action.Create,
+                "entity": user_data,
+            })
         },
 
         removeElement: function (array, index) {
@@ -131,23 +236,92 @@
         },
 
         remove(item) {
-            let copiedItems = [...this.itemsSelected];
+            const copiedItems = [...this.itemsSelected];
 
             copiedItems.forEach((item) => {
                 let indx = this.people.findIndex((element) => element.uuid == item.uuid);
+
                 if (indx >= 0) {
+
+                    this.actions.push({
+                        "action": enum_Action.Remove,
+                        "item": this.people[indx].uuid
+                    });
+
                     this.removeElement(this.people, indx)
                 }
             });
+
+            this.itemsSelected.splice(0);
         },
         
 
-        edit(item) {
+        edit() {
+            this.editItems = [];
+            
+            console.log(this.itemsSelected);
+            let copiedItems = [...this.itemsSelected];
 
+            copiedItems.forEach((item) => {
+                this.editItems.push({
+                    "name": item.name,
+                    "surname": item.surname,
+                    "middle_name": item.middle_name,
+                    "birth_date": item.birth_date,
+                    "average_mark": item.average_mark,
+                    "uuid": item.uuid
+                });
+            })
+
+            this.showEditModal = true;
+            // this.itemsSelected = [];
+        },
+
+        save_edit(editItems) {
+            editItems.forEach((item) => {
+                console.log(item);
+                let indx = this.people.findIndex((element) => element.uuid == item.uuid);
+
+                if (indx >= 0) {
+                    this.people[indx].name = item.name;
+                    this.people[indx].surname = item.surname;
+                    this.people[indx].middle_name = item.middle_name;
+                    this.people[indx].average_mark = item.average_mark;
+                    this.people[indx].birth_date = item.birth_date;
+
+                    this.actions.push({
+                        "action": enum_Action.Edit,
+                        "entity": this.people[indx],
+                    })
+                }
+            });
+
+            // console.log(this.itemsSelected === editItems);
+            this.showEditModal = false;
+
+            this.itemsSelected = [];
+            console.log(editItems);
+
+            // this.items = editItems;
+            this.editItems = []
         },
 
         save() {
-
+            console.log(this.actions);
+            httpClient.post("http://localhost:5050/human.api/save_changes", this.actions).then(
+                response => {
+                    if (response.status === 200) {
+                        info = "Изменения сохранены";
+                    }
+                }
+            ).catch(
+                err => {
+                    if (err.code === 500) {
+                        info = "Произошла серверная ошибка";
+                    }
+                }
+            );
+            this.actions.splice(0);
         },
 
         revert() {
@@ -158,23 +332,18 @@
             this.isLoading = true;
             this.people = [];
             this.itemsSelected = [];
+            this.actions.splice(0);
             this.loadPeople();
-        },
-
-        confirm() {
-
-        },
-
-        cancel() {
-
         },
 
         loadPeople() {
             httpClient.get("http://localhost:5050/human.api/get_human").then(response => {
+
             if (response.status === 200) {
                 this.people = response.data;
                 this.isLoading = false;
             }
+
         }).catch(error => {
             if (error.code === axious.AxiosError.ERR_INVALID_URL) {
                 this.info = "Люди не найдены.";
@@ -188,6 +357,6 @@
         });
         }
     },
-    components: { IconCreate, IconDelete, IconEdit, IconReload  }
+    components: { IconCreate, IconDelete, IconEdit, IconReload, Modal, AddUserModal, Hint }
 }
 </script>

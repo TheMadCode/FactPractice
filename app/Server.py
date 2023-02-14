@@ -89,17 +89,28 @@ class Server:
             return jsonify(response), 200
 
 
-        @self.app.route("/human.api/add_human", methods=['POST'])
-        def add_humans():
-            return "Implementation Error", 404
+        # @self.app.route("/human.api/add_human", methods=['POST'])
+        # def add_humans():
+        #     return "Implementation Error", 404
             
-        @self.app.route("/human.api/remove_human", methods=['POST'])
-        def remove_humans():
-            return "Implementation Error", 404
+        # @self.app.route("/human.api/remove_human", methods=['POST'])
+        # def remove_humans():
+        #     return "Implementation Error", 404
 
-        @self.app.route("/human.api/update_human", methods=['POST'])
-        def update_humans():
-            return "Implementation Error", 404
+        # @self.app.route("/human.api/update_human", methods=['POST'])
+        # def update_humans():
+        #     return "Implementation Error", 404
+
+        @self.app.route("/human.api/save_changes", methods=["POST"])
+        @cross_origin(origin='*',headers=['Content-Type','application/json'])
+        def save_people():
+
+            data = request.json
+            print(data)
+
+            self.api.people.save_changes(data)
+            
+            return "Not Implemented", 501
 
         @self.app.route("/logger/get_logs", methods=["GET"])
         def get_logger():
