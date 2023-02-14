@@ -155,3 +155,6 @@ class Server:
         self.init_routes()
         print("[+] Server initialized.", type=LoggerColor.GREEN)
         self.socketio.run(self.app, host="0.0.0.0", port="5050")
+
+
+# test commit
