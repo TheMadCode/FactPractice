@@ -4,6 +4,13 @@ from app.modules.core_database import Connector
 
 import functools
 
+@Singleton
+class Groups:
+    def __init__(self) -> None:
+        self.connection = Connector().get_connection()
+
+    def get(self):
+        return self.connection.get_groups()
 
 @Singleton
 class People:
@@ -18,7 +25,7 @@ class People:
     def get_people(self):
         return self.connection.get_people()
 
-    def update_person(self, name, surname, middle_name, birth_date, average_mark, uuid):
+    def update_person(self, name, surname, middle_name, birth_date, average_mark, uuid, group, study_year):
         '''
             TODO: Insert required data
         '''
@@ -28,7 +35,9 @@ class People:
             middle_name=middle_name,
             birth_date=birth_date,
             average_mark=average_mark,
-            uuid=uuid
+            uuid=uuid,
+            group=group,
+            study_year=study_year
         )
 
     def remove_person(self, uuid):
@@ -37,7 +46,7 @@ class People:
         '''
         return self.connection.remove_person(uuid)
 
-    def add_person(self, name, surname, middle_name, birth_date, average_mark, uuid):
+    def add_person(self, name, surname, middle_name, birth_date, average_mark, uuid, group, study_year):
         '''
             name, surname, middle_name, birth_date, average_mark, uuid
         '''
@@ -47,7 +56,9 @@ class People:
             middle_name=middle_name,
             birth_date=birth_date,
             average_mark=average_mark,
-            uuid=uuid
+            uuid=uuid,
+            group=group,
+            study_year=study_year
         )
 
     # def __filter_by_operation(*elem, **kwargs):
@@ -103,6 +114,8 @@ class People:
                 birth_date=action['entity']['birth_date'].split("T")[0],
                 average_mark=action['entity']['average_mark'],
                 uuid=action['entity']['uuid'],
+                group=action['entity']['group'],
+                study_year=action['entity']['study_year']
             )
 
         #update
@@ -114,6 +127,8 @@ class People:
                 birth_date=action['entity']['birth_date'].split("T")[0],
                 average_mark=action['entity']['average_mark'],
                 uuid=action['entity']['uuid'],
+                group=action['entity']['group'],
+                study_year=action['entity']['study_year']
             )
 
         #delete

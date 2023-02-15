@@ -10,6 +10,10 @@
 
         items: {
             required: true,
+        },
+
+        groups: {
+            required: true,
         }
     })
 </script>
@@ -41,6 +45,12 @@
 
                         <div class="col">
                             <input id="average_mark" v-model="item.average_mark" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Средняя оценка">
+                        </div>
+
+                        <div class="col">
+                            <select id="group" v-model="item.group" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Группа">
+                                <option v-for="item, value in groups" :value="value">{{ item }}</option>
+                            </select>
                         </div>
 
                         <div class="col">
@@ -77,18 +87,19 @@
 </template>
 
 <script>
-
+    // console.log(groups)
     export default {
         emits: ['save', 'hideHint', 'showHint', 'close'],
-
         data() {
             return {
+
                 // currentItems: [...this.items],
             }
         },
 
         methods: {
             save() {
+                console.log(this.groups)
                 this.$emit('save', this.items);
             },
 
@@ -112,6 +123,10 @@
                         responseText = "Средняя оценка";
                         break;
 
+                    case('group'):
+                        responseText = "Группа";
+                        break;
+
                     case('birthday'):
                         responseText = "Дата рождения";
                         break;
@@ -123,21 +138,20 @@
                 this.$emit("hideHint");
             },
 
-            change(event, type, uuid) {
-                this.items.forEach(item => {
-                    console.log(item.target);
-                    if (item.uuid === uuid){
-                        console.log(111)
-                        item.name = event.target.value;
-                    }
-                })
+            // change(event, type, uuid) {
+            //     this.items.forEach(item => {
+            //         console.log(item.target);
+            //         if (item.uuid === uuid){
+            //             item.name = event.target.value;
+            //         }
+            //     })
 
-                console.log(this.items)
+            //     console.log(this.items)
 
-                console.log(uuid);
-                console.log(event.target.value);
+            //     console.log(uuid);
+            //     console.log(event.target.value);
                 
-            },
+            // },
 
             close() {
                 this.$emit('close');

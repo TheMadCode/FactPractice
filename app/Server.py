@@ -27,6 +27,7 @@ class Server:
     class Api:
         def __init__(self) -> None:
             self.people = api.People()
+            self.groups = api.Groups()
 
     def __init__(self) -> None:
         if __name__ == "__main__":
@@ -72,7 +73,7 @@ class Server:
         #     return render_template("./auth.html")
 
         @self.app.route("/human.api/get_human", methods=['GET'])
-        @cross_origin(origin='*',headers=['Content-Type','Authorization'])
+        @cross_origin(origin='*')
         def get_humans():
             try:
                 response = self.api.people.get_people()
@@ -89,7 +90,14 @@ class Server:
 
             return jsonify(response), 200
 
+        @self.app.route("/groups.api/get", methods=['GET'])
+        @cross_origin(origin='*')
+        def get_groups():
+            
+            # data = request.json
+            # self.api.groups.get()
 
+            return jsonify(self.api.groups.get()), 200
         # @self.app.route("/human.api/add_human", methods=['POST'])
         # def add_humans():
         #     return "Implementation Error", 404

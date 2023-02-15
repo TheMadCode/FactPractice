@@ -10,8 +10,11 @@
 
         newRecord: {
             required: true,
-        }
+        },
 
+        groups: {
+            required: true,
+        }
     })
 </script>
 
@@ -44,6 +47,12 @@
                     </div>
 
                     <div class="col">
+                        <select id="group" v-model="newRecord.group" type="text" class="form-control" placeholder="Группа">
+                            <option v-for="value, key in groups" :value="key">{{ value }}</option>
+                        </select>
+                    </div>
+
+                    <div class="col">
                         <Datepicker v-model="newRecord.date_of_birth" :enable-time-picker="false" auto-apply></Datepicker>
                         <!-- <input v-model="" type="text" class="form-control" placeholder="Дата рождения"> -->
                     </div>
@@ -59,7 +68,15 @@
                     Закрыть</button>
                 </div>
                 <div class="col-auto main_action">
-                    <button :disabled="newRecord.name.length < 1 || newRecord.surname.length < 1 || newRecord.middle_name.length < 1 || newRecord.average_mark.length < 1 || newRecord.date_of_birth === null" @click="save">
+                    <button :disabled="
+                        newRecord.group === null 
+                        || newRecord.name.length < 1
+                        || newRecord.surname.length < 1
+                        || newRecord.middle_name.length < 1
+                        || newRecord.average_mark.length < 1
+                        || newRecord.date_of_birth === null
+                    " @click="save">
+                    
                     Добавить</button>
                     <button @click="$emit('clear_inputs')">
                     Очистить</button>

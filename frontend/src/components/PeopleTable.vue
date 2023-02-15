@@ -36,6 +36,7 @@
     <AddUserModal 
         :show-modal="showUserModal"
         :new-record="newRecord"
+        :groups="groups"
         @close = "showUserModal = false"
         @create_elem="createElem"
         @clear_inputs="clearUserModal"
@@ -44,6 +45,7 @@
     <EditUserModal 
         :show-modal="showEditModal"
         :items="editItems"
+        :groups="groups"
         @showHint="showHint"
         @hideHint="hideHint"
         @save = "save_edit"
@@ -91,7 +93,13 @@
             >
         <template #item-birth_date="{ birth_date }">
             <div>{{ birth_date.toDateString() }}</div>
-        </template></EasyDataTable>
+        </template>
+
+        <template #item-group="{ group }">
+            <div>{{ this.groups[group] }}</div>
+        </template>
+    
+    </EasyDataTable>
         </div>
     </div>
 </template>
@@ -120,6 +128,21 @@
 
     created() {
         // console.log(
+        httpClient.get("http://localhost:5050/groups.api/get").then(response => {
+            if (response.status === 200) {
+                response.data.forEach(item => {
+                    console.log(item);
+
+                    const key = item.unique_id;
+                    // var data = {}
+
+                    // data[key] = item.group_name,
+                    this.groups[key] = item.group_name;
+                    console.log(this.groups);
+                });
+            }
+        });
+
         httpClient.get("http://localhost:5050/human.api/get_human").then(response => {
             if (response.status === 200) {
                 response.data.forEach(item => {
@@ -131,6 +154,8 @@
                         "average_mark": item.average_mark,
                         "birth_date": new Date(item.birth_date),
                         "uuid": item.uuid,
+                        "group": item.unique_group,
+                        "study_year": item.study_year,
                     })
                 })
                 // this.people = response.data;
@@ -156,7 +181,9 @@
 
     data() {
         return {
+            groups: {},
             people: [],
+
             itemsSelected: [],
 
             showUserModal: false,
@@ -172,7 +199,8 @@
                 surname: "",
                 middle_name: "",
                 average_mark: "",
-                date_of_birth: null
+                date_of_birth: null,
+                group: null,
             },
 
             actions: [],
@@ -186,13 +214,27 @@
                 { text: "Отчество", value: "middle_name", sortable: true },
                 { text: "Средний балл", value: "average_mark", sortable: true },
                 { text: "Дата рождения", value: "birth_date"},
+                { text: "Группа", value: "group", sortable: true},
+                // { text}
             ],
         };
     },
     methods: {
-        showRow(item) {
-            console.log(this.itemsSelected);
-            // document.getElementById('row-clicked').innerHTML = JSON.stringify(item);
+        // showRow(item) {
+        //     console.log(this.itemsSelected);
+        //     // document.getElementById('row-clicked').innerHTML = JSON.stringify(item);
+        // },
+
+        return_group_text(group) {
+            return this.groups.forEach(item => {
+                if (item[group] !== undefined) {
+                    // console.log(1);
+                    alert(item[group]);
+                    return item[group];
+                }
+            })
+
+            // return this.groups[0][group]
         },
 
         clearUserModal() {
@@ -201,7 +243,8 @@
                 surname: "",
                 middle_name: "",
                 average_mark: "",
-                date_of_birth: null
+                date_of_birth: null,
+                group: null
             };
         },
 
@@ -225,7 +268,10 @@
                 "middle_name":this.newRecord.middle_name,
                 "average_mark": this.newRecord.average_mark,
                 "birth_date": this.newRecord.date_of_birth,
+                "group": this.newRecord.group,
+                "study_year": -1,
                 "uuid": user_uuid,
+                
             };
 
             this.people.push(user_data);
@@ -274,7 +320,9 @@
                     "middle_name": item.middle_name,
                     "birth_date": item.birth_date,
                     "average_mark": item.average_mark,
-                    "uuid": item.uuid
+                    "uuid": item.uuid,
+                    "group": item.group,
+                    "study_year": -1,
                 });
             })
 
@@ -293,6 +341,10 @@
                     this.people[indx].middle_name = item.middle_name;
                     this.people[indx].average_mark = item.average_mark;
                     this.people[indx].birth_date = item.birth_date;
+                    this.people[indx].group = item.group;
+                    this.people[indx].study_year = -1;
+                    // this.people[indx].birth_date = item.birth_date;
+                    // this.people[indx].birth_date = item.birth_date;
 
                     this.actions.push({
                         "action": enum_Action.Edit,
@@ -305,14 +357,14 @@
             this.showEditModal = false;
 
             this.itemsSelected = [];
-            console.log(editItems);
+            // console.log(editItems);
 
             // this.items = editItems;
             this.editItems = []
         },
 
         save() {
-            console.log(this.actions);
+            // console.log(this.actions);
             httpClient.post("http://localhost:5050/human.api/save_changes", this.actions).then(
                 response => {
                     if (response.status === 200) {
@@ -342,17 +394,34 @@
         },
 
         loadPeople() {
+            httpClient.get("http://localhost:5050/groups.api/get").then(response => {
+            if (response.status === 200) {
+                response.data.forEach(item => {
+                    console.log(item);
+
+                    const key = item.unique_id;
+                    // var data = {}
+
+                    // data[key] = item.group_name,
+                    this.groups[key] = item.group_name;
+                    console.log(this.groups);
+                });
+            }
+        });
+
             httpClient.get("http://localhost:5050/human.api/get_human").then(response => {
                 if (response.status === 200) {
                     response.data.forEach(item => {
                         console.log(item);
-                        this.people.push({
+                            this.people.push({
                             "name": item.name,
                             "surname": item.surname,
                             "middle_name": item.middle_name,
                             "average_mark": item.average_mark,
                             "birth_date": new Date(item.birth_date),
                             "uuid": item.uuid,
+                            "group": item.unique_group,
+                            "study_year": item.study_year
                         })
                     })
                     // this.people = response.data;

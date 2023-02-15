@@ -33,13 +33,13 @@ class Database_Core(Database):
         # for results in self.cursor.stored_results():
         #     return results.fetchall()[0]
 
-    def add_person(self, name, surname, middle_name, uuid, average_mark, birth_date):
-        resp = self.call_procedure('add_person', [name, surname, middle_name, average_mark, uuid, birth_date])
+    def add_person(self, name, surname, middle_name, uuid, average_mark, birth_date, group, study_year):
+        resp = self.call_procedure('add_person', [name, surname, middle_name, average_mark, uuid, birth_date, group, study_year])
         if len(resp) > 0:
             return resp[0]
 
-    def update_person(self, name, surname, middle_name, uuid, average_mark, birth_date):
-        resp = self.call_procedure('update_person', [uuid, name, surname, middle_name, average_mark, birth_date])
+    def update_person(self, name, surname, middle_name, uuid, average_mark, birth_date, group, study_year):
+        resp = self.call_procedure('update_person', [uuid, name, surname, middle_name, average_mark, birth_date, group, study_year])
         if len(resp) > 0:
             return resp[0]
 
@@ -52,6 +52,11 @@ class Database_Core(Database):
         resp = self.call_procedure('get_people', [])
         for item in resp:
             item['birth_date'] = item['birth_date'].isoformat()
+        if len(resp) > 0:
+            return resp
+
+    def get_groups(self):
+        resp = self.call_procedure('get_groups', [])
         if len(resp) > 0:
             return resp
 
