@@ -33,6 +33,8 @@
 
     <Hint :text="currentFieldName" :is-active="showEditHint" @close="showEditHint = false"/>
 
+    <PeopleTableFilter class="" :groups="groups" />
+
     <AddUserModal 
         :show-modal="showUserModal"
         :new-record="newRecord"
@@ -113,6 +115,8 @@
     import AddUserModal from "./addUserModal.vue";
     import EditUserModal from "./editUserModal.vue";
     import Hint from "./Hint.vue";
+
+    import PeopleTableFilter from "./PeopleTableFilter.vue";
 
     const httpClient = axious.create();
     
