@@ -111,6 +111,39 @@ class Server:
 
             return {"response": "successfuly saved"}, 200
 
+        @self.app.route("/human.api/update", methods=["POST"])
+        @cross_origin(origin='*',headers=['Content-Type','application/json'])
+        def update_person():
+            print("Update route")
+            return jsonify({"text":"to be done"}), 501
+
+            data = request.json
+            self.api.people.update_person(**data)
+
+            return {"response": "successfuly saved"}, 200
+
+        @self.app.route("/human.api/add", methods=["POST"])
+        @cross_origin(origin='*',headers=['Content-Type','application/json'])
+        def add_person():
+            print("Add route")
+            return jsonify({"text":"to be done"}), 501
+
+            data = request.json
+            self.api.people.save_changes(data)
+
+            return {"response": "successfuly saved"}, 200
+
+        @self.app.route("/human.api/delete", methods=["POST"])
+        @cross_origin(origin='*',headers=['Content-Type','application/json'])
+        def delete_person():
+            print("Delete route")
+            return jsonify({"text":"to be done"}), 501
+
+            data = request.json
+            self.api.people.save_changes(data)
+
+            return {"response": "successfuly saved"}, 200
+
         @self.app.route("/logger/get_logs", methods=["GET"])
         def get_logger():
             return print()
