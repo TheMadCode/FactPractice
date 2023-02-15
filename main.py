@@ -57,11 +57,11 @@ def generate_name():
 
 #     )
 
-print(generate_uuid())
-print(generate_average_mark())
-print(generate_birthday())
+# print(generate_uuid())
+# print(generate_average_mark())
+# print(generate_birthday())
 
-name, surname, middle_name = generate_name()
+# name, surname, middle_name = generate_name()
 
 
 # people_api.add_person(name, surname, middle_name,

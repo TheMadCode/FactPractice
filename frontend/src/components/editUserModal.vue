@@ -44,7 +44,11 @@
                         </div>
 
                         <div class="col">
-                            <input id="birthday" v-model="item.birth_date" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Дата рождения">
+                            <div class="col">
+                                <Datepicker v-model="item.birth_date" :enable-time-picker="false" auto-apply></Datepicker>
+                                <!-- <input v-model="" type="text" class="form-control" placeholder="Дата рождения"> -->
+                            </div>
+                            <!-- <input id="birthday" v-model="" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Дата рождения"> -->
                         </div>
                     </li>
                 </ul>

@@ -9,6 +9,9 @@ import "bootstrap";
 
 import UUID from "vue3-uuid";
 
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
 // import Vue from 'vue'
 // import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
@@ -33,6 +36,7 @@ app.use(createPinia());
 app.use(router);
 app.use(UUID)
 
+app.component('Datepicker', Datepicker);
 app.component('EasyDataTable', Vue3EasyDataTable);
 
 app.mount("#app");

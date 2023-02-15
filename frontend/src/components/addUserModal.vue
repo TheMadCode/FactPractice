@@ -44,7 +44,8 @@
                     </div>
 
                     <div class="col">
-                        <input v-model="newRecord.date_of_birth" type="text" class="form-control" placeholder="Дата рождения">
+                        <Datepicker v-model="newRecord.date_of_birth" :enable-time-picker="false" auto-apply></Datepicker>
+                        <!-- <input v-model="" type="text" class="form-control" placeholder="Дата рождения"> -->
                     </div>
                 </div>
                 </form>
@@ -58,7 +59,7 @@
                     Закрыть</button>
                 </div>
                 <div class="col-auto main_action">
-                    <button @click="save">
+                    <button :disabled="newRecord.name.length < 1 || newRecord.surname.length < 1 || newRecord.middle_name.length < 1 || newRecord.average_mark.length < 1 || newRecord.date_of_birth === null" @click="save">
                     Добавить</button>
                     <button @click="$emit('clear_inputs')">
                     Очистить</button>
@@ -73,14 +74,24 @@
 
 <script>
 
+    import { ref } from 'vue';
+
     export default {
-        emits: ['close', 'clear_inputs', 'create_elem'],
         
+        emits: ['close', 'clear_inputs', 'create_elem'],
+
         methods: {
             save() {
                 this.$emit('create_elem');
             }
-        }
+        },
+
+        // data: {
+        //     flow: ['month', 'year', 'calendar'],
+        // }
+        // data: {
+            
+        // }
     }
 
 </script>

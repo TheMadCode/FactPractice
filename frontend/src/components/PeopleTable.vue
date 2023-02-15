@@ -88,7 +88,10 @@
 
                 v-model:items-selected="itemsSelected"
                 show-index
-            />
+            >
+        <template #item-birth_date="{ birth_date }">
+            <div>{{ birth_date.toDateString() }}</div>
+        </template></EasyDataTable>
         </div>
     </div>
 </template>
@@ -126,7 +129,7 @@
                         "surname": item.surname,
                         "middle_name": item.middle_name,
                         "average_mark": item.average_mark,
-                        "birth_date": item.birth_date,
+                        "birth_date": new Date(item.birth_date),
                         "uuid": item.uuid,
                     })
                 })
@@ -134,6 +137,8 @@
                 // console.log(typeof(this.people[0].birth_date))
                 this.isLoading = false;
             }
+            this.isLoading = false;
+
         }).catch(error => {
             if (error.code === axious.AxiosError.ERR_INVALID_URL) {
                 this.info = "Люди не найдены.";
@@ -167,7 +172,7 @@
                 surname: "",
                 middle_name: "",
                 average_mark: "",
-                date_of_birth: ""
+                date_of_birth: null
             },
 
             actions: [],
@@ -196,7 +201,7 @@
                 surname: "",
                 middle_name: "",
                 average_mark: "",
-                date_of_birth: ""
+                date_of_birth: null
             };
         },
 
@@ -338,11 +343,25 @@
 
         loadPeople() {
             httpClient.get("http://localhost:5050/human.api/get_human").then(response => {
-
-            if (response.status === 200) {
-                this.people = response.data;
-                this.isLoading = false;
-            }
+                if (response.status === 200) {
+                    response.data.forEach(item => {
+                        console.log(item);
+                        this.people.push({
+                            "name": item.name,
+                            "surname": item.surname,
+                            "middle_name": item.middle_name,
+                            "average_mark": item.average_mark,
+                            "birth_date": new Date(item.birth_date),
+                            "uuid": item.uuid,
+                        })
+                    })
+                    // this.people = response.data;
+                    // console.log(typeof(this.people[0].birth_date))
+                    this.isLoading = false;
+             }
+             else {
+                this.loading = false;
+             }
 
         }).catch(error => {
             if (error.code === axious.AxiosError.ERR_INVALID_URL) {

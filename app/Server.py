@@ -76,8 +76,9 @@ class Server:
         def get_humans():
             try:
                 response = self.api.people.get_people()
+                print(1)
 
-            except:
+            except Exception as e:
                 return jsonify({
                     "errorType": "Internal Server error",
                     "errNum": "302x13k1k23"
@@ -106,11 +107,9 @@ class Server:
         def save_people():
 
             data = request.json
-            print(data)
-
             self.api.people.save_changes(data)
-            
-            return "Not Implemented", 501
+
+            return {"response": "successfuly saved"}, 200
 
         @self.app.route("/logger/get_logs", methods=["GET"])
         def get_logger():

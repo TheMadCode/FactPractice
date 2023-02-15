@@ -188,3 +188,5 @@ cython_debug/
 #.idea/
 
 set_up.json
+
+/test/

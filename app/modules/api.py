@@ -90,6 +90,34 @@ class People:
         update_actions = list(filter(get_update_actions, actions))
         delete_actions = list(filter(get_delete_actions, actions))
 
-        print(delete_actions)
-        print(create_actions)
-        print(update_actions)
+        # print(create_actions)
+        # print(update_actions)
+        # print(delete_actions)
+
+        #create 
+        for action in create_actions:
+            self.add_person(
+                name=action['entity']['name'],
+                surname=action['entity']['surname'],
+                middle_name=action['entity']['middle_name'],
+                birth_date=action['entity']['birth_date'].split("T")[0],
+                average_mark=action['entity']['average_mark'],
+                uuid=action['entity']['uuid'],
+            )
+
+        #update
+        for action in update_actions:
+            self.update_person(
+                name=action['entity']['name'],
+                surname=action['entity']['surname'],
+                middle_name=action['entity']['middle_name'],
+                birth_date=action['entity']['birth_date'].split("T")[0],
+                average_mark=action['entity']['average_mark'],
+                uuid=action['entity']['uuid'],
+            )
+
+        #delete
+        for action in delete_actions:
+            self.remove_person(
+                uuid=action['item'],
+            )
