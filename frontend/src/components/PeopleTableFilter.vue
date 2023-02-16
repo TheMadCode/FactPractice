@@ -37,7 +37,7 @@
                     </div>
 
                     <div class="col">
-                        <select v-model="filter.group.value" id="group" type="text" class="form-control" placeholder="Группа">
+                        <select v-model="filter.group.value" id="group" class="form-control" placeholder="Группа">
                             <option v-for="value, key in groups" :value="key">{{ value }}</option>
                         </select>
                     </div>

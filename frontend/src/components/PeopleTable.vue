@@ -155,14 +155,14 @@
         httpClient.get("http://localhost:5050/groups.api/get").then(response => {
             if (response.status === 200) {
                 response.data.forEach(item => {
-                    console.log(item);
+                    // console.log(item);
 
                     const key = item.unique_id;
                     // var data = {}
 
                     // data[key] = item.group_name,
                     this.groups[key] = item.group_name;
-                    console.log(this.groups);
+                    // console.log(this.groups);
                 });
             }
         });
@@ -170,7 +170,7 @@
         httpClient.get("http://localhost:5050/human.api/get_human").then(response => {
             if (response.status === 200) {
                 response.data.forEach(item => {
-                    console.log(item);
+                    // console.log(item);
                     this.people.push({
                         "name": item.name,
                         "surname": item.surname,
@@ -278,7 +278,7 @@
         },
 
         showHint(text) {
-            console.log(text)
+            // console.log(text)
             this.showEditHint = true;
             this.currentFieldName = text
         },
@@ -398,7 +398,7 @@
         edit() {
             this.editItems = [];
             
-            console.log(this.itemsSelected);
+            // console.log(this.itemsSelected);
             let copiedItems = [...this.itemsSelected];
 
             copiedItems.forEach((item) => {
@@ -420,7 +420,7 @@
 
         save_edit(editItems) {
             editItems.forEach((item) => {
-                console.log(item);
+                // console.log(item);
                 let indx = this.people.findIndex((element) => element.uuid == item.uuid);
 
                 if (indx >= 0) {
@@ -485,14 +485,14 @@
             httpClient.get("http://localhost:5050/groups.api/get").then(response => {
             if (response.status === 200) {
                 response.data.forEach(item => {
-                    console.log(item);
+                    // console.log(item);
 
                     const key = item.unique_id;
                     // var data = {}
 
                     // data[key] = item.group_name,
                     this.groups[key] = item.group_name;
-                    console.log(this.groups);
+                    // console.log(this.groups);
                 });
             }
         });
@@ -500,7 +500,7 @@
             httpClient.get("http://localhost:5050/human.api/get_human").then(response => {
                 if (response.status === 200) {
                     response.data.forEach(item => {
-                        console.log(item);
+                        // console.log(item);
                             this.people.push({
                             "name": item.name,
                             "surname": item.surname,

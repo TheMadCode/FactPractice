@@ -47,12 +47,12 @@
                     </div>
 
                     <div class="col">
-                        <Datepicker placeholder="Дата рождения"  v-model="newRecord.date_of_birth" :enable-time-picker="false" auto-apply></Datepicker>
+                        <Datepicker placeholder="Дата рождения" :clearable="false" v-model="newRecord.date_of_birth" :enable-time-picker="false" auto-apply></Datepicker>
                         <!-- <input v-model="" type="text" class="form-control" placeholder="Дата рождения"> -->
                     </div>
 
                     <div class="col">
-                        <select id="group" v-model="newRecord.group" type="text" class="form-control" placeholder="Группа">
+                        <select id="group" v-model="newRecord.group" class="form-control" placeholder="Группа">
                             <option v-for="value, key in groups" :value="key">{{ value }}</option>
                         </select>
                     </div>

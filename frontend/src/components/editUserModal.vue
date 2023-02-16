@@ -28,36 +28,36 @@
     </template>
     <template #body>
         <div class="container-xs">
-            <form>
+            <form onsubmit="alert('submit!');return false">
                 <ul class="edit-list">
                     <li v-for="item in items" class="row edit-item">
                         <div class="col">
-                            <input id="name" v-model="item.name" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Имя">
+                            <input required id="name" v-model="item.name" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Имя">
                         </div>
 
                         <div class="col">
-                            <input id="surname" v-model="item.surname" type="text" @focusin="setCurrentField"  @focusout="removeCurrentField" class="form-control" placeholder="Фамилия">
+                            <input required id="surname" v-model="item.surname" type="text" @focusin="setCurrentField"  @focusout="removeCurrentField" class="form-control" placeholder="Фамилия">
                         </div>
 
                         <div class="col">
-                            <input id="middle_name" v-model="item.middle_name" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Отчество">
+                            <input required id="middle_name" v-model="item.middle_name" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Отчество">
                         </div>
 
                         <div class="col">
-                            <input @keypress="isNumber($event)" id="average_mark" v-model="item.average_mark" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Средняя оценка">
+                            <input required @keypress="isNumber($event)" id="average_mark" v-model="item.average_mark" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Средняя оценка">
                         </div>
 
 
                         <div class="col">
                             <div class="col">
-                                <Datepicker v-model="item.birth_date" :enable-time-picker="false" placeholder="Дата рождения" auto-apply></Datepicker>
+                                <Datepicker aria-required="true" :clearable="false" v-model="item.birth_date" :enable-time-picker="false" placeholder="Дата рождения" auto-apply></Datepicker>
                                 <!-- <input v-model="" type="text" class="form-control" placeholder="Дата рождения"> -->
                             </div>
                             <!-- <input id="birthday" v-model="" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Дата рождения"> -->
                         </div>
 
                         <div class="col">
-                            <select id="group" v-model="item.group" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Группа">
+                            <select required id="group" v-model="item.group" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Группа">
                                 <option v-for="item, value in groups" :value="value">{{ item }}</option>
                             </select>
                         </div>
@@ -74,11 +74,10 @@
                     Закрыть</button>
                 </div>
                 <div class="col-auto main_action">
-                    <button @click="save">
+                    <button type="submit" @click="save">
                     Сохранить</button>
                 </div>
             </div>
-            
         </div>
 
     </template>
@@ -93,14 +92,24 @@
         emits: ['save', 'hideHint', 'showHint', 'close'],
         data() {
             return {
-
+                // checker:  setInterval(() => {
+                //     this.items.forEach(item => {
+                //         item.target.name;
+                //         item.target.surname;
+                //         item.target.middle_name;
+                //         item.target.average_mark;
+                //         item.target.group;
+                //         item.target.surname;
+                //     });
+                    
+                // }, 100)
                 // currentItems: [...this.items],
             }
         },
 
         methods: {
             save() {
-                console.log(this.groups)
+                // console.log(this.groups)
                 this.$emit('save', this.items);
             },
 
@@ -117,7 +126,7 @@
             }},
 
             setCurrentField(event) {
-                console.log(this.items);
+                // console.log(this.items);
                 var responseText = "";
                 switch(event.target.attributes.id.value) {
                     case('name'):
