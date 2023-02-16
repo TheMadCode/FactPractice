@@ -51,7 +51,8 @@ class Database_Core(Database):
     def get_people(self):
         resp = self.call_procedure('get_people', [])
         for item in resp:
-            item['birth_date'] = item['birth_date'].isoformat()
+            if item['birth_date'] != None:
+                item['birth_date'] = item['birth_date'].isoformat()
         if len(resp) > 0:
             return resp
 

@@ -77,9 +77,10 @@ class Server:
         def get_humans():
             try:
                 response = self.api.people.get_people()
-                print(1)
+                # print(1)
 
             except Exception as e:
+                # print(e)
                 return jsonify({
                     "errorType": "Internal Server error",
                     "errNum": "302x13k1k23"
