@@ -189,17 +189,18 @@
             this.isLoading = false;
 
         }).catch(error => {
+            
             if (error.code === axious.AxiosError.ERR_INVALID_URL) {
                 this.info = "Люди не найдены.";
-                this.loading = false;
+                this.isLoading = false;
             }
             else if (error.code === axious.AxiosError.ERR_BAD_RESPONSE) {
                 this.info = "Произошла серверная ошибка.";
-                this.loading = false;
+                this.isLoading = false;
             }
             else {
                 this.info = "Произошла ошибка";
-                this.loading = false;
+                this.isLoading = false;
             }
         });
     },

@@ -84,7 +84,7 @@ class Server:
                 return jsonify({
                     "errorType": "Internal Server error",
                     "errNum": "302x13k1k23"
-                }), 300
+                }), 500
 
             if "code" in response[0].keys():
                 return jsonify(response), response["code"]
