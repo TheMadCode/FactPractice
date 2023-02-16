@@ -212,7 +212,7 @@
     input.form-control:focus { 
         outline: none;
         border-color: #dedede;
-        box-shadow: 0 0 10px #21212133;
+        box-shadow:  -1px -1px 6px #f2f2f2, 1px 1px 6px #D7E1F0
     }
 
     .modal-container {

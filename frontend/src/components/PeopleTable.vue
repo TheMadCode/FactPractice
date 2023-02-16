@@ -64,24 +64,24 @@
         <div id="button-list" class="row m-0 ps-2 pt-1 pb-1 pe-2">
             <div class="d-flex align-items-end justify-content-between">
                 <div class="d-flex">
-                    <button id="show-modal" @click="showUserModal = true" class="btn border-0">
+                    <button id="show-modal" @click="showUserModal = true" class="btn m-1 border-0">
                         <IconCreate></IconCreate>
                     </button>
 
-                    <button :disabled="itemsSelected.length <= 0" v-on:click="edit" class="btn border-0">
+                    <button :disabled="itemsSelected.length <= 0" v-on:click="edit" class="btn m-1 border-0">
                         <IconEdit></IconEdit>
                     </button>
 
-                    <button :disabled="itemsSelected.length <= 0" v-on:click="remove" class="btn border-0">
+                    <button :disabled="itemsSelected.length <= 0" v-on:click="remove" class="btn m-1 border-0">
                         <IconDelete></IconDelete>
                     </button>
                 </div>
                 <div class="d-flex">
-                    <div v-on:click="this.reload" class="btn">
+                    <button v-on:click="this.reload" class="m-1 btn">
                         <IconReload></IconReload>
-                    </div>
+                    </button>
 
-                    <button :disabled="this.actions.length <= 0" v-on:click="save" class="btn border-0">
+                    <button :disabled="this.actions.length <= 0" v-on:click="save" class="btn m-1 border-0">
                         <IconSave></IconSave>
                     </button>
                 </div>
@@ -191,12 +191,15 @@
         }).catch(error => {
             if (error.code === axious.AxiosError.ERR_INVALID_URL) {
                 this.info = "Люди не найдены.";
+                this.loading = false;
             }
             else if (error.code === axious.AxiosError.ERR_BAD_RESPONSE) {
                 this.info = "Произошла серверная ошибка.";
+                this.loading = false;
             }
             else {
                 this.info = "Произошла ошибка";
+                this.loading = false;
             }
         });
     },
