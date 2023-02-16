@@ -107,9 +107,12 @@
             isNumber: function(evt) {
                 evt = (evt) ? evt : window.event;
                 var charCode = (evt.which) ? evt.which : evt.keyCode;
-                if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-                    evt.preventDefault();;
+                if (((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46)) {
+                    evt.preventDefault();
                 } else {
+                    if ((evt.target.value + evt.key > 5) || (evt.target.value + evt.key < 2)) {
+                        evt.preventDefault();
+                    }
                     return true;
             }},
 
@@ -216,13 +219,13 @@
     }
 
     .modal-container {
-    width: 1100px;
-    margin: auto;
-    padding: 20px 30px;
-    background-color: #fff;
-    border-radius: 2px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-    transition: all 0.3s ease;
+        width: 1100px;
+        margin: auto;
+        padding: 20px 30px;
+        background-color: #fff;
+        border-radius: 2px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+        transition: all 0.3s ease;
     }
 
 </style>
