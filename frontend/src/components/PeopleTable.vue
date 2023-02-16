@@ -15,9 +15,9 @@
     }
 
     .table {
-        --easy-table-body-even-row-background-color: rgba(228, 228, 228, 0.526);
+        --easy-table-body-even-row-background-color: rgba(237, 237, 237, 0.526);
         --easy-table-header-font-size: 15px;
-        --easy-table-header-background-color:  rgba(194, 194, 194, 0.475);
+        --easy-table-header-background-color:  rgba(225, 225, 225, 0.475);
         /* --easy-table-header-font-weight: bold; */
 
     }
@@ -33,7 +33,13 @@
 
     <Hint :text="currentFieldName" :is-active="showEditHint" @close="showEditHint = false"/>
 
-    <PeopleTableFilter class="" :groups="groups" />
+    <PeopleTableFilter
+     class=""
+     @set="setFilter"
+     @clear="clearFilter"
+     :groups="groups"
+     :filter="filter"
+    />
 
     <AddUserModal 
         :show-modal="showUserModal"
@@ -90,6 +96,8 @@
                 border-cell
                 buttons-pagination
 
+                alternating
+                :filter-options="filterOptions"
                 v-model:items-selected="itemsSelected"
                 show-index
             >
@@ -117,8 +125,20 @@
     import Hint from "./Hint.vue";
 
     import PeopleTableFilter from "./PeopleTableFilter.vue";
+    import { ref } from "vue";
+
+    // import ref from "vue";
 
     const httpClient = axious.create();
+
+    const filter = {
+        "name": ref(null),
+        "surname": ref(null),
+        "middle_name": ref(null),
+        "average_mark": ref(null),
+        "group": ref(null),
+        "date_range": ref(null),
+    };
     
     httpClient.defaults.timeout = 500;
 
@@ -189,6 +209,7 @@
             people: [],
 
             itemsSelected: [],
+            filterOptions: [],
 
             showUserModal: false,
             showEditModal: false,
@@ -310,6 +331,65 @@
             this.itemsSelected.splice(0);
         },
         
+        setFilter() {
+            this.filterOptions = [];
+
+            if (filter.name.value !== null) {
+                this.filterOptions.push({
+                    field: "name",
+                    comparison: "in",
+                    criteria: filter.name.value,
+            })};
+
+            if (filter.surname.value !== null) {
+                this.filterOptions.push({
+                    field: "surname",
+                    comparison: "in",
+                    criteria: filter.surname.value,
+            })};
+
+            if (filter.middle_name.value !== null) {
+                this.filterOptions.push({
+                    field: "middle_name",
+                    comparison: "in",
+                    criteria: filter.middle_name.value,
+            })};
+
+            if (filter.average_mark.value !== null) {
+                this.filterOptions.push({
+                    field: "average_mark",
+                    comparison: "=",
+                    criteria: parseFloat(filter.average_mark.value),
+            })};
+
+            if (filter.group.value !== null) {
+                this.filterOptions.push({
+                    field: "group",
+                    comparison: "=",
+                    criteria: filter.group.value,
+            })};
+
+            if (filter.date_range.value !== null) {
+                this.filterOptions.push({
+                    field: "birth_date",
+                    comparison: "between",
+                    criteria: filter.date_range.value,
+            })};
+            
+            // console.log(filter.name.value);
+            // this.filterOptions = {}
+        },
+
+        clearFilter() {
+            this.filterOptions = [];
+
+            filter.name.value = null;
+            filter.surname.value = null;
+            filter.middle_name.value = null;
+            filter.average_mark.value = null;
+            filter.group.value = null;
+            filter.date_range.value = null;
+        },
 
         edit() {
             this.editItems = [];

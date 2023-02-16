@@ -43,18 +43,18 @@
                     </div>
 
                     <div class="col">
-                        <input v-model="newRecord.average_mark" type="text" class="form-control" placeholder="Средняя оценка">
+                        <input @keypress="isNumber($event)" v-model="newRecord.average_mark" type="text" class="form-control" placeholder="Средняя оценка">
+                    </div>
+
+                    <div class="col">
+                        <Datepicker placeholder="Дата рождения"  v-model="newRecord.date_of_birth" :enable-time-picker="false" auto-apply></Datepicker>
+                        <!-- <input v-model="" type="text" class="form-control" placeholder="Дата рождения"> -->
                     </div>
 
                     <div class="col">
                         <select id="group" v-model="newRecord.group" type="text" class="form-control" placeholder="Группа">
                             <option v-for="value, key in groups" :value="key">{{ value }}</option>
                         </select>
-                    </div>
-
-                    <div class="col">
-                        <Datepicker v-model="newRecord.date_of_birth" :enable-time-picker="false" auto-apply></Datepicker>
-                        <!-- <input v-model="" type="text" class="form-control" placeholder="Дата рождения"> -->
                     </div>
                 </div>
                 </form>
@@ -76,7 +76,7 @@
                         || newRecord.average_mark.length < 1
                         || newRecord.date_of_birth === null
                     " @click="save">
-                    
+
                     Добавить</button>
                     <button @click="$emit('clear_inputs')">
                     Очистить</button>
@@ -100,7 +100,16 @@
         methods: {
             save() {
                 this.$emit('create_elem');
-            }
+            },
+
+            isNumber: function(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                    evt.preventDefault();;
+                } else {
+                    return true;
+            }},
         },
 
         // data: {

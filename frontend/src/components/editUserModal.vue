@@ -44,21 +44,22 @@
                         </div>
 
                         <div class="col">
-                            <input id="average_mark" v-model="item.average_mark" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Средняя оценка">
+                            <input @keypress="isNumber($event)" id="average_mark" v-model="item.average_mark" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Средняя оценка">
+                        </div>
+
+
+                        <div class="col">
+                            <div class="col">
+                                <Datepicker v-model="item.birth_date" :enable-time-picker="false" placeholder="Дата рождения" auto-apply></Datepicker>
+                                <!-- <input v-model="" type="text" class="form-control" placeholder="Дата рождения"> -->
+                            </div>
+                            <!-- <input id="birthday" v-model="" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Дата рождения"> -->
                         </div>
 
                         <div class="col">
                             <select id="group" v-model="item.group" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Группа">
                                 <option v-for="item, value in groups" :value="value">{{ item }}</option>
                             </select>
-                        </div>
-
-                        <div class="col">
-                            <div class="col">
-                                <Datepicker v-model="item.birth_date" :enable-time-picker="false" auto-apply></Datepicker>
-                                <!-- <input v-model="" type="text" class="form-control" placeholder="Дата рождения"> -->
-                            </div>
-                            <!-- <input id="birthday" v-model="" type="text" @focusin="setCurrentField" @focusout="removeCurrentField" class="form-control" placeholder="Дата рождения"> -->
                         </div>
                     </li>
                 </ul>
@@ -102,6 +103,15 @@
                 console.log(this.groups)
                 this.$emit('save', this.items);
             },
+
+            isNumber: function(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                    evt.preventDefault();;
+                } else {
+                    return true;
+            }},
 
             setCurrentField(event) {
                 console.log(this.items);
