@@ -40,25 +40,25 @@ class People:
             study_year=study_year
         )
 
-    def remove_person(self, uuid):
+    def remove_person(self, data):
         '''
             uuid required
         '''
-        return self.connection.remove_person(uuid)
+        return self.connection.remove_person(data['uuid'])
 
-    def add_person(self, name, surname, middle_name, birth_date, average_mark, uuid, group, study_year):
+    def add_person(self, data):
         '''
             name, surname, middle_name, birth_date, average_mark, uuid
         '''
         return self.connection.add_person(
-            name=name,
-            surname=surname,
-            middle_name=middle_name,
-            birth_date=birth_date,
-            average_mark=average_mark,
-            uuid=uuid,
-            group=group,
-            study_year=study_year
+            name=data['name'],
+            surname=data['surname'],
+            middle_name=data['middleName'],
+            birth_date=None,
+            average_mark=data['GCA'],
+            uuid=data['uuid'],
+            group=data['group'],
+            study_year=data['study_year']
         )
 
     # def __filter_by_operation(*elem, **kwargs):
