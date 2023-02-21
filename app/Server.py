@@ -124,7 +124,7 @@ class Server:
         @cross_origin(origin='*',headers=['Content-Type','application/json'])
         def update_person():
             print("Update route")
-            return jsonify({"text":"to be done"}), 501
+            # return jsonify({"text":"to be done"}), 501
 
             data = request.json
             self.api.people.update_person(**data)

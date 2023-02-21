@@ -50,15 +50,17 @@ class People:
         '''
             name, surname, middle_name, birth_date, average_mark, uuid
         '''
+
+        
         return self.connection.add_person(
             name=data['name'],
             surname=data['surname'],
             middle_name=data['middleName'],
             birth_date=None,
-            average_mark=data['GCA'],
+            average_mark=data['GPA'],
             uuid=data['uuid'],
             group=data['group'],
-            study_year=data['study_year']
+            study_year=data['yearOfStudy']
         )
 
     # def __filter_by_operation(*elem, **kwargs):
